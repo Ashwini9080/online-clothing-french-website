@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Remix: LUMIERE",
+  "description": "High-end digital editorial fashion lookbook and curated apparel gallery with fluid micro-interactions and asymmetrical layout design.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
