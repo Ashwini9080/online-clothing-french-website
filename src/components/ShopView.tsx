@@ -37,7 +37,7 @@ export default function ShopView({
   const [activeDropdown, setActiveDropdown] = useState<"size" | "color" | "fabric" | null>(null);
   const [heartAnim, setHeartAnim] = useState<string | null>(null);
 
-  const sizesList = ["ALL", "XS", "S", "M", "L"];
+  const sizesList = ["ALL", "36", "38", "40", "42", "4", "5", "6", "7", "8", "9"];
   const colorsList = ["ALL", "MONO", "GOLD"];
   const fabricsList = ["ALL", "WOOL", "SILK", "COTTON", "LEATHER", "METAL"];
   const categories = ["ALL", "Dresses", "Outerwear", "Tailoring", "Accessories", "Footwear"];
@@ -213,7 +213,7 @@ export default function ShopView({
                 <div className="relative bg-surface-container-lowest overflow-hidden border border-outline-variant/10 card-lift">
                   <img
                     alt={product.title}
-                    className={`w-full ${aspectClass} object-cover grayscale transition-all duration-700 ease-in-out group-hover:scale-105 group-hover:grayscale-0`}
+                    className={`w-full ${aspectClass} object-cover transition-all duration-700 ease-in-out group-hover:scale-105`}
                     src={product.mainImage}
                     referrerPolicy="no-referrer"
                   />

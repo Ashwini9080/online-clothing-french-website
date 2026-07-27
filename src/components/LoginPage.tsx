@@ -88,13 +88,13 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     const cleanEmail = sanitizeEmail(email);
     const cleanName = sanitizeText(name);
 
-    if (!isValidEmail(cleanEmail)) { setError("Kripaya valid email daalein."); triggerShake(); return; }
+    if (!isValidEmail(cleanEmail)) { setError("Please enter a valid email address."); triggerShake(); return; }
     const pwError = validatePassword(password);
     if (pwError) { setError(pwError); triggerShake(); return; }
 
     if (mode === "signup") {
-      if (!cleanName || cleanName.length < 2) { setError("Naam kam se kam 2 characters ka hona chahiye."); triggerShake(); return; }
-      if (cleanName.length > 60) { setError("Naam bahut lamba hai."); triggerShake(); return; }
+      if (!cleanName || cleanName.length < 2) { setError("Name must be at least 2 characters."); triggerShake(); return; }
+      if (cleanName.length > 60) { setError("Name is too long."); triggerShake(); return; }
     }
 
     setLoading(true);
@@ -104,7 +104,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       const users = loadUsers();
       if (mode === "signup") {
         if (users.some((u) => u.email === cleanEmail)) {
-          setError("Is email se account banana possible nahi. Dusra email try karein ya login karein.");
+          setError("An account with this email already exists. Try a different email or sign in.");
           triggerShake(); setLoading(false); return;
         }
         const hashed = await hashPassword(password);
@@ -118,11 +118,11 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         if (!found) {
           const result = recordFailedAttempt();
           if (result.locked) {
-            setError(`Bahut zyada galat attempts. Account 15 minute ke liye lock ho gaya.`);
+            setError(`Too many failed attempts. Account locked for 15 minutes.`);
             startLockoutCountdown(LOCKOUT_DURATION_MS);
           } else {
             const remaining = MAX_ATTEMPTS - (result.attempts ?? 0);
-            setError(`Email ya password galat hai. ${remaining} attempt${remaining === 1 ? "" : "s"} bachee hain.`);
+            setError(`Incorrect email or password. ${remaining} attempt${remaining === 1 ? "" : "s"} remaining.`);
           }
           triggerShake(); setLoading(false); return;
         }
@@ -131,7 +131,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       }
     } catch (err) {
       console.error("[Auth] Unexpected error:", err);
-      setError("Kuch gadbad ho gayi. Page reload karein.");
+      setError("Something went wrong. Please reload the page.");
       triggerShake(); setLoading(false);
     }
   };
@@ -223,8 +223,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
             {/* Tabs */}
             <div className="flex mb-8 relative border-b border-white/[0.05]">
               {[
-                { mode: "login" as AuthMode, label: "Se connecter" },
-                { mode: "signup" as AuthMode, label: "S'inscrire" },
+                { mode: "login" as AuthMode, label: "Sign In" },
+                { mode: "signup" as AuthMode, label: "Register" },
               ].map(({ mode: m, label }) => (
                 <button
                   key={m}
@@ -278,7 +278,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                       <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-amber-400 transition-colors duration-300" />
                       <input
                         type="text"
-                        placeholder="Aapka poora naam"
+                        placeholder="Your full name"
                         value={name}
                         onChange={(e) => setName(e.target.value.slice(0, 60))}
                         className="w-full text-white placeholder-white/20 text-sm pl-12 pr-4 py-4 outline-none transition-all"
@@ -422,13 +422,13 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
             {/* Switch mode */}
             <p className="text-center text-[11px] text-white/25 mt-6">
-              {mode === "login" ? "Naya account chahiye?" : "Pehle se account hai?"}{" "}
+              {mode === "login" ? "Don't have an account?" : "Already have an account?"}{" "}
               <button
                 onClick={switchMode}
                 className="text-amber-400/70 hover:text-amber-400 underline underline-offset-2 cursor-pointer transition-colors"
                 id="switch-mode-btn" disabled={isLocked}
               >
-                {mode === "login" ? "Register karein" : "Login karein"}
+                {mode === "login" ? "Register here" : "Sign in here"}
               </button>
             </p>
 

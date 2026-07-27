@@ -17,14 +17,14 @@ export const categories: Category[] = [
     thumbnailImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuCvypu-dUEgyEQDjmoIHiZHXWIcRknTm4T6sX3Y15QSnLf3O7S25C2so7BIf1azOZd49kD3O2mtRATxlX7uyNq7t0pKXoI1QsawCyl5FIYS76Xo6hQsq6_YwR1qevGsh9lSo_27obp4j5LnXJi0dPo72hmCKY0-q1iTecf_CXaNFIbvQ0gZb51lBjB6dswFbjiEDV2QcgM-Xy0uYz_70_VWSgjyk9gnx-XXoviiuaLG3z9Gd6Vz85Jt51zb3zWkRIgx6T0z-ZKqSiw"
   },
   {
-    name: "Footwear",
-    displayName: "Footwear",
-    thumbnailImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuA8gTjOiUwNyQHIsxe0D3ih0eaNX5uRlhH8ftYAN-pDLswu9pH7KgOpg8BvEJEM5TSCOqmQlnvIODJozzgFa8kk1kJHxRLkrztjT909YM7nsptBs5-Cp5c9TAtuGGXo_NSgTOShfV0c3F03foAU2gio_Ecnznt4t2-nQwQODl3_tyhu8IShAlwNnrUgMFGT3KAbbkaN7Uyf6X3-Bf_QE6qocuJEZb-Rm8BuMLI2lAU-TqL5ssjSiwdmUFTO-RUODKK-a5cMrhlRnbk"
-  },
-  {
     name: "Tailoring",
     displayName: "Tailoring",
     thumbnailImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuAHTvRRfbvpwtA4ReXlzPxxvFjHmYaf9zvuGIfr2p-bx4tH6teC6bITpsjpxh7zUnnjtHqEvJPD_5KB9Qob1nKyr-q7bXkE2MhtbeEiNx4XYvFvV4sueAN3DADhdgx6p20v8FuWZ32kq5YnS5F5ZWQlnASbIo91dQ4lojECnHiPTV6Q44SoE6E9-qcjEMZkbuhjpemMuxRPPj69B9h2MiouMV5vqJDvMQ5naTeqVYfnhFWBTTrpZ0iS7fnGmNZRg2pNETShvEZe8FA"
+  },
+  {
+    name: "Footwear",
+    displayName: "Footwear",
+    thumbnailImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuA8gTjOiUwNyQHIsxe0D3ih0eaNX5uRlhH8ftYAN-pDLswu9pH7KgOpg8BvEJEM5TSCOqmQlnvIODJozzgFa8kk1kJHxRLkrztjT909YM7nsptBs5-Cp5c9TAtuGGXo_NSgTOShfV0c3F03foAU2gio_Ecnznt4t2-nQwQODl3_tyhu8IShAlwNnrUgMFGT3KAbbkaN7Uyf6X3-Bf_QE6qocuJEZb-Rm8BuMLI2lAU-TqL5ssjSiwdmUFTO-RUODKK-a5cMrhlRnbk"
   }
 ];
 
@@ -37,7 +37,7 @@ export const products: Product[] = [
     description: "A masterclass in minimalist draping. This bias-cut silhouette is crafted from 32mm heavy-weight mulberry silk, designed to trace the contours of the body with a liquid-like finish. Featuring delicate adjustable straps and a raw-edge hem.",
     material: "100% Mulberry Silk",
     origin: "Milan, Italy",
-    sizes: ["XS", "S", "M", "L"],
+    sizes: ["36", "38", "40", "42"],
     categories: ["Dresses"],
     mainImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuBPeOLVpYX8AArLWueEhfJVXNpbQaz7kstoCrEOxqvSOtHitciOf7rh0XTkmGBfng81LbBwyNI8nN6Uwjeigmj54y6GXi7lVrideJOLvJooqBZC8YT6oOzO5KfxGa0IlW3mL_sKfrR-lvZwvaiDEJDWDVNxvm-i3u4sTWnARr31MgbskTWV580j6jkuSF4sfoVgHt2w7pyK3gBg5mOwinrDZYriuNtOI3J3N-1_Gnk2qZ3v07OWrSdrGFvceJeL6SPVjAIau24uRzw",
     galleryImages: [
@@ -59,7 +59,7 @@ export const products: Product[] = [
     description: "An archival classic highlighting structured shoulders and beautiful asymmetric lines. Engineered for seamless layered silhouettes with fluid warmth.",
     material: "100% Virgin Wool",
     origin: "Florence, Italy",
-    sizes: ["XS", "S", "M", "L"],
+    sizes: ["36", "38", "40", "42"],
     categories: ["Outerwear", "Tailoring"],
     mainImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuApYsvpdRsRuz-CYxlD8bddEP4LDufTAE72JrWLoyMcwX9qz0pmIGHJKxjb4zOio8USQ_HAfaU8tBrxAqI1rdXVhLN1Ac6zZSoyyjTx_ScDvX1IuiGKpKEPewHuDPPi63JxY4U1RgoUEDloXbH9iv6IpdmFUoKruL1--M6NUud8DydhJ15Y8SOwDAaV0BFZZT_tQFxMJIVfil-2ege9S1BUC2pamtu06b7PhYYP4gOTVTIk_f_hQFkRJTxWHNOjNWTnMl6f9Usc8Gk",
     sustainability: "100% biodegradable pure wool sourced from certified sustainable farms in Tuscany, processed using closed-loop water treatment facilities.",
@@ -75,7 +75,7 @@ export const products: Product[] = [
     description: "Sculpted heavyweight canvas top focusing on custom geometry. Features clean raw-edge lines and a tailored waist ideal for layering or high-waisted separates.",
     material: "Heavy Cotton Canvas Blend",
     origin: "Milan, Italy",
-    sizes: ["S", "M", "L"],
+    sizes: ["38", "40", "42"],
     categories: ["Tailoring"],
     mainImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuA0Oa5NwuxNmtGKYk7WaR0jE8K3b9rTqYrn1yO9TjTsCHOjLPPLuhtmeAx83GWzo-4tQdxQMexMSuwX4TakbQkoWBZSbmyaazwZ0_E7T3cLvpx1U_90Z137oSKwsRiDM_inKTKkh8OJNqypa9XDVzcQopGQ5NBiBGMS_FVheA9Td6k-7uYYFCVHQZdVcSUX5nvlbZk2mO8Z7i7THNzjbZKf1g-7dNl9i6DsGtFE7X0oUiE8HxQvecuCuk4emIU7Cwg0jvfNzaecQ3w",
     sustainability: "Crafted from organically grown industrial cotton, utilizing zero-waste pattern drafting techniques.",
@@ -91,7 +91,7 @@ export const products: Product[] = [
     description: "A delicate wrap camisole silhouette designed with mulberry silk. Offers a fluid fit with elegant adjustable thin back-straps and clean flatlock details.",
     material: "100% Mulberry Silk",
     origin: "Lake Como, Italy",
-    sizes: ["XS", "S", "M"],
+    sizes: ["36", "38", "40"],
     categories: ["Dresses", "Accessories"],
     mainImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuBDkbqTiGSEkIJBW6ECqef_6Z3OuFgVCC0k7y4Tfvu-hz5mSaCOENt8k_nxOV_AZuRkNk91e2dR-kdci75hV87nQNijLAZk_w4qbJmGZmjwDEi_3n2GmP38uqiGLpHR3ZXnA9daZdTTYBWa2dhOoJHpkEeQ7o9QKzrn0R58T3mSWaHZsZj3zbc8RUv-1Fr0lhL_Cvp6NZtVzWrd6ABZcDJCXrcDycc8pczCrsCMecwBX2ACtv3xSM0s5c-9jO7kCr5i8mtHiYyk5kI",
     sustainability: "Sourced from local organic silk weavers in Italy. Dyed with GOTS certified non-toxic organic colors.",
@@ -107,7 +107,7 @@ export const products: Product[] = [
     description: "Minimalist wide-leg trousers exploring negative space. Detailed with deep front pleating and structured side slip pockets for high comfort.",
     material: "90% Organic Cotton, 10% Fine Linen",
     origin: "Bologna, Italy",
-    sizes: ["XS", "S", "M", "L"],
+    sizes: ["36", "38", "40", "42"],
     categories: ["Tailoring"],
     mainImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuAXlheGTbu06nZmepHQ61V6IxJzgPpd-NXwoRDLeVijIIwZerqhTn5Z5V6VamlDanAWUVap1gkaIouPcglUpzfs5K72ePweUdvNclbQavmb8ui5nJbSp1NKclVawfcDFO0OXqfFREr5p7vLj73hCfgQ-d1K9rCov5Kdw6qAwFREaA0c4sSHvm8OiXbcNFU_IM8b04n4DKfcVuUCY8fPkge10g1jm4Qc1zvx9FK0yDtR8OMIY4I_vMpTRPSzvMfBIQGuyZ61nJ_pnxc",
     sustainability: "Crafted in a carbon-neutral factory in Bologna from ethically certified organic cotton fibers.",
@@ -123,7 +123,7 @@ export const products: Product[] = [
     description: "Monochromatic luxury calfskin low sneakers. Minimalist panel construction with ultra-soft hand-finished leather lining and durable natural rubber soles.",
     material: "100% Premium Calfskin Leather",
     origin: "Naples, Italy",
-    sizes: ["S", "M", "L"],
+    sizes: ["7", "8", "9"],
     categories: ["Footwear", "Accessories"],
     mainImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuBrVpztCumLNBoAItFeOmuvk3f7I9J7dI2Cux0WS_1EFfYkjVp0UtaExlIar94q8V-FGB6tOgevReYSv3Tw-fWRO30TuLHGiWE3_enU1Wjm5JHhVwN9i9Oj89-NkWYO3mQlYedFWSGhb-IiP7mIOZBk-LwPP7dGN0KKM26wZ5x2wf0bkOONtcbrvcCXfeeBOClKdyr-uJUsd11xSzJiLjW6rLeaU0I1BgtItEI75tP-UCkkHBb5IQaLmhkdDi7Sk34iHShzuhCJ3mU",
     sustainability: "Leather tanned in LWG Gold-certified Italian tanneries utilizing eco-efficient chrome-free processing.",
@@ -131,6 +131,7 @@ export const products: Product[] = [
     color: "MONO",
     fabric: "LEATHER"
   },
+
   {
     id: "linear-layering",
     title: "Linear Layering",
@@ -139,7 +140,7 @@ export const products: Product[] = [
     description: "An editorial collection exploring asymmetrical volume ratios. Stacks naturally with fine knits or tailored outer pieces to evoke a sculptural look.",
     material: "80% Virgin Wool, 20% Cashmere",
     origin: "Turin, Italy",
-    sizes: ["XS", "S", "M", "L"],
+    sizes: ["36", "38", "40", "42"],
     categories: ["Tailoring"],
     mainImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuAnqpDt0A4LrUz4DUFet98zPoD70Dy2Rukt5Pw8piXcwEdcie42Vc3gTZvUeO2Ud9GPLeP47DBwvRYjjnsJ2HqrUVBMud2hr038w_TpNfKkN4nrqf6_gQ39gxnBglwAEO_yjeZfIp6UsWm3rcSTwMtuC4jWfivJyQ-hSHWaLmjFTxQl0vAXDyAms-NVeyRhs_IvpKHy2fS3HLxoj2nh_5jFoVMiO62Crw6C-iXTRGGn7Z-CUsMfIVMYPFznHXK0hoESmYFPS9kEaTA",
     sustainability: "Sourced from animal welfare certified sheep farms in Piedmont. Manufactured with zero chemical waste output.",
@@ -155,7 +156,7 @@ export const products: Product[] = [
     description: "A striking, elegant floor-length silk gown featuring deep architectural plunging neck lines and structured drape lines that flow gracefully with every movement.",
     material: "100% Organza Silk",
     origin: "Rome, Italy",
-    sizes: ["S", "M"],
+    sizes: ["38", "40"],
     categories: ["Dresses"],
     mainImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuAXjm9gytZ_vcWUwuQtTUMW7UVTAGFj0tPbYXZa_Pb5veWnmekt9H4g_dD1BYk-gKY6P4W-55ImCXo7tVwRNaKQpvRHRVUljk5-ka7xFJ2ESLobdWw0V5tjiat3TloS6UFTRnSSKcqHWnxPfOMt2Vsw3RuLE_afbkAKafGbRUYzU-FlcmWLyW2lf8DFRMjJNXRNqlsZbOj5xklFzvlvKzByQVpQQ_rqhafTiVGiXXLMgdSLRih2uS28gVQmd5l1tiXULhOb5B8fd7Y",
     sustainability: "Made in limited quantities in Rome to prevent surplus inventory. Dyed with ecological herbal extracts.",
@@ -187,7 +188,7 @@ export const products: Product[] = [
     description: "Elegant double-breasted structured blazer cut in premium Virgin Wool. Highlights clean oversized lapels and raw-lined inner seams for comfortable structure.",
     material: "85% Virgin Wool, 15% Italian Silk",
     origin: "Milan, Italy",
-    sizes: ["XS", "S", "M", "L"],
+    sizes: ["36", "38", "40", "42"],
     categories: ["Tailoring"],
     mainImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuDa0AOJS1_hnUDp5sTjQBKwvZnErVdmSuRWibtbC2OxMO3YBdF2vh_CiiLc9g_tCKxgdGq3f10v4ukY2SsANfrB5kW-0aMpcnjq9nK-RtqAa7SX3BP5m-wuXR_TYoE1NXh5PDBD029VzWutYrCp9U6_6jKmmgoey9jm9pV_FkDAw5oL8lu3Ab2Msrhy1Cg_bidj5l8QCmmqjnpTydARkfmVWXqsW2mpfBjTQ5FpodtSNI1PCE9YUPZcu-7Bc6WJUCCx5wJcEsP4MhE",
     sustainability: "Wool sourced ethically in northern Italy. Manufactured with 100% renewable power in Milan.",
@@ -203,7 +204,7 @@ export const products: Product[] = [
     description: "An avant-garde interpretation of the classic trench coat. Boasts extra-long storm flaps, custom raw-finish hems, and an ultra-cinched tailored belt structure.",
     material: "75% Gabardine Cotton, 25% Cultivated Silk",
     origin: "Tokyo, Japan",
-    sizes: ["S", "M", "L"],
+    sizes: ["38", "40", "42"],
     categories: ["Outerwear"],
     mainImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuCY3wii-Z4qR0xFlKFPvv4vnkF_KTx2WERbN3fhmhdFxcIPOg2Xqx3nhnMLnNOaeuiT1JTmbY3IfHPS17KWSGxk5SPK6oVgMACf8_1yJHFqSqfGig6p218DlZ_NqVliWOvJcvyLTTmrKMcAjchrkZ5zShL-fujANRW9C-4arGKku9eklL5rhtuGkMtYkALlqKAKdF1Ye3Vn7mzV3VNl25R28XBPMPsvJgKpSwlxQKMbjUUttFxJIxX7Ue-cvdjJH-j72QnK0s8QSnA",
     sustainability: "Made in partnership with small sustainable heritage farms in Tokyo. No plastic elements or synthetic threads.",
@@ -219,7 +220,7 @@ export const products: Product[] = [
     description: "Stunning minimalist strappy sandal boasting an architectural profile. Structured with block stacked wood heels and full calfskin support strap systems.",
     material: "100% Calfskin Upper, Solid Oak Heel",
     origin: "Venice, Italy",
-    sizes: ["XS", "S", "M", "L"],
+    sizes: ["4", "5", "6", "7"],
     categories: ["Footwear"],
     mainImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuDUa8Fu2pirc21alV0kkll4JTC40cGCnw0R0lD7k_-HsA2nh2k13E2KyefEiT0Zd_ziUQV9MUizb_5FHh3DB9FNZknNjgBZOaWqzwlbjZqy171-6RR5WPBfoizFR5ieFmMM3fQqEVYQbn5jfNegF4s-OV3aPsgAcPoCyO691SyCdLb4ePWzBOlOR_5VSCq9dfZkI8NK4H4Go-61c2Jcj-H3y3R7A1h858ASGCDQzK8K-R_CLWq2WBVgb0AFiUGZG2pgX_sVFlISjLw",
     sustainability: "Utilizes timber sourced from responsibly managed forests (FSC certified) and vegetable-tanned lining leathers.",

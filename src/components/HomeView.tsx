@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { ArrowRight, Sparkles, Star } from "lucide-react";
+import { ArrowRight, Sparkles, Star, Code2, Layers, Cpu, Zap } from "lucide-react";
 import { Category } from "../types";
 import { categories } from "../data";
 
@@ -25,6 +25,40 @@ const itemVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.4, 0, 0.2, 1] } },
 };
+
+// Numbered section header — hallmark of structured web-dev editorial sites
+function SectionHeader({ number, label, title }: { number: string; label: string; title: string }) {
+  return (
+    <motion.div
+      className="flex items-end justify-between mb-12 pb-5 border-b border-outline-variant/10"
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+    >
+      <div className="flex items-start gap-6">
+        {/* Section number badge */}
+        <div className="flex-shrink-0 mt-1">
+          <span
+            className="font-label text-[9px] tracking-[0.3em] uppercase font-bold select-none"
+            style={{
+              background: "linear-gradient(135deg, rgba(167,139,250,0.15), rgba(201,169,110,0.1))",
+              border: "1px solid rgba(167,139,250,0.25)",
+              padding: "4px 10px",
+              color: "rgba(167,139,250,0.7)",
+            }}
+          >
+            {number}
+          </span>
+        </div>
+        <div>
+          <p className="font-label text-[9px] uppercase tracking-[0.4em] text-outline/50 mb-2">{label}</p>
+          <h3 className="font-headline text-3xl tracking-wide">{title}</h3>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function HomeView({ onNavigateToShop, onNavigateToProduct }: HomeViewProps) {
   const heroRef = useRef<HTMLElement>(null);
@@ -72,7 +106,7 @@ export default function HomeView({ onNavigateToShop, onNavigateToProduct }: Home
             ✦ &nbsp; Issue No. 04 — Winter 2026 &nbsp; ✦
           </motion.p>
 
-          {/* Main headline — word-by-word stagger */}
+          {/* Main headline */}
           <div className="overflow-hidden mb-8">
             <motion.h2
               initial={{ opacity: 0, y: 60 }}
@@ -151,19 +185,12 @@ export default function HomeView({ onNavigateToShop, onNavigateToProduct }: Home
         </div>
       </div>
 
-      {/* ── COLLECTIONS SECTION ── */}
+      {/* ── SECTION 01: COLLECTIONS ── */}
       <section className="px-6 max-w-7xl mx-auto pt-24">
-        <motion.div
-          className="flex items-end justify-between mb-12 pb-4 border-b border-outline-variant/10"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <div>
-            <p className="font-label text-[9px] uppercase tracking-[0.4em] text-outline/50 mb-2">Browse by</p>
-            <h3 className="font-headline text-3xl tracking-wide">Collections</h3>
-          </div>
+        <SectionHeader number="01" label="Browse by" title="Collections" />
+
+        {/* View all link */}
+        <div className="flex justify-end -mt-4 mb-10">
           <motion.button
             whileHover={{ x: 4 }}
             onClick={() => onNavigateToShop("ALL")}
@@ -172,7 +199,7 @@ export default function HomeView({ onNavigateToShop, onNavigateToProduct }: Home
           >
             VIEW ALL <ArrowRight className="w-3.5 h-3.5" />
           </motion.button>
-        </motion.div>
+        </div>
 
         {/* Categories grid */}
         <motion.div
@@ -205,10 +232,15 @@ export default function HomeView({ onNavigateToShop, onNavigateToProduct }: Home
                 <div className="absolute inset-1.5 rounded-full overflow-hidden">
                   <img
                     alt={cat.displayName}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 scale-100 group-hover:scale-110 transition-all duration-700"
+                    className="w-full h-full object-cover scale-100 group-hover:scale-110 transition-all duration-700"
                     src={cat.thumbnailImage}
                     referrerPolicy="no-referrer"
                   />
+                </div>
+                {/* Numbered overlay */}
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-[8px] font-bold select-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ background: "linear-gradient(135deg, #a78bfa, #7c5ce1)", color: "#f5f0ff" }}>
+                  {String(idx + 1).padStart(2, "0")}
                 </div>
               </div>
               <span className="font-label text-[10px] tracking-widest uppercase text-outline/70 group-hover:text-primary transition-colors duration-300">
@@ -219,24 +251,9 @@ export default function HomeView({ onNavigateToShop, onNavigateToProduct }: Home
         </motion.div>
       </section>
 
-      {/* ── FEATURED EDITORIAL GRID ── */}
+      {/* ── SECTION 02: EDITORIAL GRID ── */}
       <section className="px-6 max-w-7xl mx-auto pt-28">
-        <motion.div
-          className="col-span-12 mb-8 border-b border-outline-variant/10 pb-5 flex items-center justify-between"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <div>
-            <p className="font-label text-[9px] uppercase tracking-[0.4em] text-amber-400/50 mb-1 flex items-center gap-2">
-              <Sparkles className="w-3 h-3" /> Editorial
-            </p>
-            <h3 className="font-label text-[10px] tracking-[0.45em] text-outline uppercase font-medium">
-              Issue No. 04 — Essentialism
-            </h3>
-          </div>
-        </motion.div>
+        <SectionHeader number="02" label="Editorial" title="Issue No. 04 — Essentialism" />
 
         <div className="grid grid-cols-12 gap-y-16 md:gap-x-12">
           {/* Left Column: Big feature */}
@@ -253,7 +270,7 @@ export default function HomeView({ onNavigateToShop, onNavigateToProduct }: Home
             >
               <img
                 alt="Editorial Monolith Coat"
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-105"
+                className="w-full h-full object-cover transition-all duration-700 scale-100 group-hover:scale-105"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjT8Yi2sesfMugzSPwC2ObE0tGGPcdSRc-qH5uSTeIwN9n7fN-C9Kww-kbi0cAEK0Swc2vufkOyFs800ecT0kAQcD5_r_7W-076YQZ-Cp6fMb9So3fOpUkq_Sc1445QxNR6oCn6V6yf5ZOorFaQjDvXeCIiQxuzWFVYilA-ge7QA2b1-M7eARcfDTGnngddVpTQPuG-STk8NvmpQi57GNLAgNAnZkFrgX8UOzS9ljZOKlOFbI264Jf7yf-jXE2fTDNjN5Hpi4t98k"
                 referrerPolicy="no-referrer"
               />
@@ -263,17 +280,24 @@ export default function HomeView({ onNavigateToShop, onNavigateToProduct }: Home
                 <p className="text-white/80 font-label text-[10px] tracking-widest uppercase">View Product</p>
               </div>
             </div>
-            <div className="mt-6 space-y-3">
-              <h4
-                onClick={() => onNavigateToProduct("the-archival-trench")}
-                className="font-headline text-2xl font-medium cursor-pointer animated-underline inline-block leading-tight hover:text-primary transition-colors"
-              >
-                The Monolith Coat
-              </h4>
-              <p className="font-body text-sm text-on-surface-variant leading-relaxed max-w-xl">
-                Structural integrity meets raw silk. A study in architectural volume for the modern nomad.
-                Fully customized detailing with virgin Italian wool canvas.
-              </p>
+            <div className="mt-6 flex items-start justify-between gap-4">
+              <div className="space-y-2">
+                <h4
+                  onClick={() => onNavigateToProduct("the-archival-trench")}
+                  className="font-headline text-2xl font-medium cursor-pointer animated-underline inline-block leading-tight hover:text-primary transition-colors"
+                >
+                  The Monolith Coat
+                </h4>
+                <p className="font-body text-sm text-on-surface-variant leading-relaxed max-w-xl">
+                  Structural integrity meets raw silk. A study in architectural volume for the modern nomad.
+                  Fully customized detailing with virgin Italian wool canvas.
+                </p>
+              </div>
+              {/* Tag pill */}
+              <span className="flex-shrink-0 mt-1 px-3 py-1 text-[8px] font-label uppercase tracking-widest font-bold select-none"
+                style={{ background: "rgba(201,169,110,0.12)", border: "1px solid rgba(201,169,110,0.3)", color: "#c9a96e" }}>
+                Featured
+              </span>
             </div>
           </motion.div>
 
@@ -291,7 +315,7 @@ export default function HomeView({ onNavigateToShop, onNavigateToProduct }: Home
             >
               <img
                 alt="Editorial Accent"
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-105"
+                className="w-full h-full object-cover transition-all duration-700 scale-100 group-hover:scale-105"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3qwjL2PuB2ZO_9Bh-m0J3PSRBVhmxsw-Xlhfzb57zurw9NZbsHXwrpaDtxPzij28CCUTaF7j2hIj-tScbOY9oSZRoKo47Go6clWeidbYUf7Tu5g3_lCd-mKioWqdZ2oUkiSVX1RZTxl9WKj-AJqmIWwLTCv9n5g_Ypzr10XitLOwAu-ugwJ_pZvrQqkamydJitPn5ZHbPRNOKCroUI9jsguKBrrnpZoebRRhjHpM7NY3MLTRDORDmEyZO-SG9I-YaHcsr-zga17c"
                 referrerPolicy="no-referrer"
               />
@@ -310,6 +334,49 @@ export default function HomeView({ onNavigateToShop, onNavigateToProduct }: Home
             </div>
           </motion.div>
         </div>
+      </section>
+
+      {/* ── SECTION 03: BRAND SPECS / TECH STACK VISUAL ── */}
+      <section className="px-6 max-w-7xl mx-auto pt-28">
+        <SectionHeader number="03" label="The Lumière Promise" title="Crafted with Excellence" />
+
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+        >
+          {[
+            { icon: Layers, label: "Materials", value: "OEKO-TEX® Certified", desc: "Every fabric verified for safety and sustainability" },
+            { icon: Cpu, label: "Origin", value: "Italian Atelier", desc: "Hand-crafted in family-owned workshops" },
+            { icon: Zap, label: "Delivery", value: "Carbon Neutral", desc: "Priority dispatch from our Lombardy warehouse" },
+            { icon: Code2, label: "Sizing", value: "Indian Standards", desc: "Sizes 36–42 following IS: 4835 guidelines" },
+          ].map(({ icon: Icon, label, value, desc }) => (
+            <motion.div
+              key={label}
+              variants={itemVariants}
+              className="relative p-6 group"
+              style={{
+                background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(167,139,250,0.1)",
+              }}
+            >
+              {/* Hover border glow */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                style={{ boxShadow: "inset 0 0 20px rgba(167,139,250,0.05)", border: "1px solid rgba(167,139,250,0.25)" }} />
+
+              {/* Top-left corner accent */}
+              <div className="absolute top-0 left-0 w-6 h-6 border-t border-l border-primary/30 group-hover:border-primary/70 transition-colors duration-500" />
+              <div className="absolute bottom-0 right-0 w-6 h-6 border-b border-r border-primary/30 group-hover:border-primary/70 transition-colors duration-500" />
+
+              <Icon className="w-5 h-5 text-primary/50 mb-4 group-hover:text-primary transition-colors duration-300" />
+              <p className="font-label text-[9px] uppercase tracking-[0.35em] text-outline/40 mb-1">{label}</p>
+              <p className="font-headline text-lg font-medium mb-2">{value}</p>
+              <p className="font-body text-[11px] text-outline/50 leading-relaxed">{desc}</p>
+            </motion.div>
+          ))}
+        </motion.div>
       </section>
 
       {/* ── BRAND STATEMENT ── */}
@@ -341,6 +408,37 @@ export default function HomeView({ onNavigateToShop, onNavigateToProduct }: Home
           <div className="h-px flex-1 bg-gradient-to-l from-transparent to-outline-variant/20" />
         </div>
       </motion.section>
+
+      {/* ── FOOTER STRIP ── */}
+      <footer className="border-t border-outline-variant/10 px-6 py-10 max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div>
+            <p className="font-headline text-lg tracking-[0.3em] font-bold text-shimmer inline-block mb-1">LUMIÈRE</p>
+            <p className="font-label text-[9px] uppercase tracking-[0.4em] text-outline/40">Couture Studio · Est. 2026</p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-12">
+            {[
+              { label: "Collections", action: () => onNavigateToShop("ALL") },
+              { label: "Dresses", action: () => onNavigateToShop("Dresses") },
+              { label: "Tailoring", action: () => onNavigateToShop("Tailoring") },
+              { label: "Accessories", action: () => onNavigateToShop("Accessories") },
+            ].map(({ label, action }) => (
+              <button
+                key={label}
+                onClick={action}
+                className="font-label text-[10px] uppercase tracking-widest text-outline/50 hover:text-primary transition-colors cursor-pointer"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <p className="font-label text-[9px] uppercase tracking-widest text-outline/25 select-none">
+            © 2026 All Rights Reserved
+          </p>
+        </div>
+      </footer>
 
     </div>
   );

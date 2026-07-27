@@ -32,7 +32,7 @@ export default function ProductDetailView({
 
   useEffect(() => {
     if (product.sizes.length > 0) {
-      setSelectedSize(product.sizes.includes("S") ? "S" : product.sizes[0]);
+      setSelectedSize(product.sizes.includes("38") ? "38" : product.sizes[0]);
     }
     setActiveImageIdx(0);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -365,7 +365,7 @@ export default function ProductDetailView({
             >
               <div className="aspect-[3/4] overflow-hidden border border-outline-variant/10 card-lift">
                 <img
-                  className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700 grayscale group-hover:grayscale-0"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
                   src={p.mainImage}
                   alt={p.title}
                   referrerPolicy="no-referrer"
