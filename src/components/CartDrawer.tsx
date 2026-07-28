@@ -5,7 +5,7 @@ import {
   MapPin, Phone, User, ChevronLeft, Home, Navigation, Sparkles
 } from "lucide-react";
 import { CartItem } from "../types";
-import { sanitizeText } from "../services/security";
+
 
 export interface DeliveryAddress {
   fullName: string;
@@ -117,11 +117,11 @@ export default function CartDrawer({
   const handlePlaceOrder = () => {
     if (!validateAddress()) return;
     const cleanAddress: DeliveryAddress = {
-      fullName: sanitizeText(address.fullName),
+      fullName: address.fullName,
       phone: address.phone.replace(/\s/g, "").slice(0, 15),
-      addressLine1: sanitizeText(address.addressLine1),
-      addressLine2: sanitizeText(address.addressLine2),
-      city: sanitizeText(address.city),
+      addressLine1: address.addressLine1,
+      addressLine2: address.addressLine2,
+      city: address.city,
       state: address.state,
       pincode: address.pincode.trim(),
     };

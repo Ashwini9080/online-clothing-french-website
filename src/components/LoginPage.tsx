@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { Eye, EyeOff, Mail, User, Lock, ArrowRight, CheckCircle, Loader2, ShieldAlert, Timer, Sparkles } from "lucide-react";
 import { LoggedInUser, StoredUser } from "../types";
 import {
-  hashPassword, sanitizeText, sanitizeEmail, isValidEmail,
-  validatePassword, recordFailedAttempt, checkRateLimit, clearRateLimit, saveSession,
+  sanitizeEmail,
+  validatePassword, saveSession,
 } from "../services/security";
 
 interface LoginPageProps {
@@ -42,53 +42,19 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   const strengthLabels = ["", "Weak", "Fair", "Good", "Strong"];
   const strengthColors = ["", "#ef4444", "#f59e0b", "#10b981", "#a78bfa"];
 
-  useEffect(() => {
-    const rl = checkRateLimit();
-    if (rl.locked && rl.remainingMs) {
-      setLockoutMs(rl.remainingMs);
-      startLockoutCountdown(rl.remainingMs);
-    }
-  }, []);
 
-  useEffect(() => {
-    return () => { if (lockoutTimer) clearInterval(lockoutTimer); };
-  }, [lockoutTimer]);
-
-  const startLockoutCountdown = (ms: number) => {
-    let remaining = ms;
-    const timer = setInterval(() => {
-      remaining -= 1000;
-      setLockoutMs(remaining);
-      if (remaining <= 0) { clearInterval(timer); setLockoutMs(0); setError(""); }
-    }, 1000);
-    setLockoutTimer(timer);
-  };
 
   const triggerShake = () => { setShake(true); setTimeout(() => setShake(false), 600); };
   const formatLockoutTime = (ms: number) => `${Math.floor(ms / 60000)}:${Math.floor((ms % 60000) / 1000).toString().padStart(2, "0")}`;
 
-  const loadUsers = (): StoredUser[] => {
-    try {
-      const raw = localStorage.getItem(USERS_STORE_KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch { return []; }
-  };
 
-  const saveUsers = (users: StoredUser[]) => localStorage.setItem(USERS_STORE_KEY, JSON.stringify(users));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    const rl = checkRateLimit();
-    if (rl.locked) { setError(`Too many attempts. Try again in ${formatLockoutTime(rl.remainingMs ?? 0)}`); triggerShake(); return; }
-
     const cleanEmail = sanitizeEmail(email);
-    const cleanName = sanitizeText(name);
-
-    if (!isValidEmail(cleanEmail)) { setError("Please enter a valid email address."); triggerShake(); return; }
+    const cleanName = name;
     const pwError = validatePassword(password);
     if (pwError) { setError(pwError); triggerShake(); return; }
 
@@ -98,40 +64,47 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     }
 
     setLoading(true);
-    await new Promise((res) => setTimeout(res, 800 + Math.random() * 400));
 
     try {
-      const users = loadUsers();
       if (mode === "signup") {
-        if (users.some((u) => u.email === cleanEmail)) {
-          setError("An account with this email already exists. Try a different email or sign in.");
+        // Register API Call
+        const res = await fetch("http://localhost:5000/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: cleanName, email: cleanEmail, password })
+        });
+        const data = await res.json();
+        
+        if (!res.ok) {
+          setError(data.error || "Registration failed.");
           triggerShake(); setLoading(false); return;
         }
-        const hashed = await hashPassword(password);
-        const storedUser: StoredUser = { name: cleanName, email: cleanEmail, hashedPassword: hashed, joinedAt: new Date().toISOString() };
-        saveUsers([...users, storedUser]);
-        const sessionUser: LoggedInUser = { name: cleanName, email: cleanEmail, joinedAt: storedUser.joinedAt };
-        saveSession(sessionUser); clearRateLimit(); setLoading(false); onLogin(sessionUser);
+
+        saveSession({ name: data.user.name, email: data.user.email, joinedAt: data.user.joinedAt }, data.token);
+        setLoading(false);
+        onLogin({ name: data.user.name, email: data.user.email, joinedAt: data.user.joinedAt });
       } else {
-        const hashed = await hashPassword(password);
-        const found = users.find((u) => u.email === cleanEmail && u.hashedPassword === hashed);
-        if (!found) {
-          const result = recordFailedAttempt();
-          if (result.locked) {
-            setError(`Too many failed attempts. Account locked for 15 minutes.`);
-            startLockoutCountdown(LOCKOUT_DURATION_MS);
-          } else {
-            const remaining = MAX_ATTEMPTS - (result.attempts ?? 0);
-            setError(`Incorrect email or password. ${remaining} attempt${remaining === 1 ? "" : "s"} remaining.`);
-          }
+        // Login API Call
+        const res = await fetch("http://localhost:5000/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: cleanEmail, password })
+        });
+        const data = await res.json();
+        
+        if (!res.ok) {
+          setError(data.error || `Incorrect email or password.`);
           triggerShake(); setLoading(false); return;
         }
-        const sessionUser: LoggedInUser = { name: found.name, email: found.email, joinedAt: found.joinedAt };
-        saveSession(sessionUser); clearRateLimit(); setLoading(false); onLogin(sessionUser);
+
+        saveSession({ name: data.user.name, email: data.user.email, joinedAt: data.user.joinedAt }, data.token);
+        clearRateLimit();
+        setLoading(false);
+        onLogin({ name: data.user.name, email: data.user.email, joinedAt: data.user.joinedAt });
       }
     } catch (err) {
       console.error("[Auth] Unexpected error:", err);
-      setError("Something went wrong. Please reload the page.");
+      setError("Server connection failed. Please make sure the backend is running.");
       triggerShake(); setLoading(false);
     }
   };

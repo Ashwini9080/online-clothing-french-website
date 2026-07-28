@@ -13,7 +13,7 @@ import ProfileView from "./components/ProfileView";
 import CartDrawer from "./components/CartDrawer";
 import LoginPage from "./components/LoginPage";
 import { sendOrderConfirmation, generateOrderId } from "./services/emailService";
-import { readSession, clearSession, sanitizeText } from "./services/security";
+import { readSession, clearSession } from "./services/security";
 
 export default function App() {
   // Auth state — uses secure session reader (validates expiry + data integrity)
@@ -182,7 +182,7 @@ export default function App() {
 
     // Use logged-in user's sanitized details for the order
     const customerEmail = currentUser?.email ?? "";
-    const customerName = sanitizeText(currentUser?.name ?? "Guest");
+    const customerName = currentUser?.name ?? "Guest";
 
     // Send order confirmation email asynchronously
     sendOrderConfirmation({
