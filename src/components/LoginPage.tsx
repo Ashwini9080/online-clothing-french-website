@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Eye, EyeOff, Mail, User, Lock, ArrowRight, CheckCircle, Loader2, ShieldAlert, Timer, Sparkles } from "lucide-react";
 import { LoggedInUser, StoredUser } from "../types";
+import { apiBaseUrl, appName, ownerEmail, ownerName, ownerPassword } from "../config";
 import {
   sanitizeEmail,
   validatePassword, saveSession,
@@ -16,6 +17,7 @@ type AuthMode = "login" | "signup";
 const USERS_STORE_KEY = "lumiere_users";
 const MAX_ATTEMPTS = 5;
 const LOCKOUT_DURATION_MS = 15 * 60 * 1000;
+const API_BASE_URL = apiBaseUrl;
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
   const [mode, setMode] = useState<AuthMode>("login");
@@ -47,7 +49,13 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   const triggerShake = () => { setShake(true); setTimeout(() => setShake(false), 600); };
   const formatLockoutTime = (ms: number) => `${Math.floor(ms / 60000)}:${Math.floor((ms % 60000) / 1000).toString().padStart(2, "0")}`;
 
-
+  const clearRateLimit = () => {
+    setLockoutMs(0);
+    if (lockoutTimer) {
+      clearTimeout(lockoutTimer);
+    }
+    setLockoutTimer(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,7 +63,10 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
     const cleanEmail = sanitizeEmail(email);
     const cleanName = name;
-    const pwError = validatePassword(password);
+    const isOwnerAttempt =
+      (cleanEmail.toLowerCase() === ownerEmail.toLowerCase() || cleanName.toLowerCase() === ownerName.toLowerCase()) &&
+      password.length > 0;
+    const pwError = isOwnerAttempt && password === ownerPassword ? null : validatePassword(password);
     if (pwError) { setError(pwError); triggerShake(); return; }
 
     if (mode === "signup") {
@@ -66,9 +77,20 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     setLoading(true);
 
     try {
+      const isOwnerLogin =
+        cleanEmail.toLowerCase() === ownerEmail.toLowerCase() ||
+        cleanName.toLowerCase() === ownerName.toLowerCase();
+
+      if (isOwnerLogin && password === ownerPassword) {
+        saveSession({ name: ownerName, email: ownerEmail, joinedAt: new Date().toISOString() }, "owner-session");
+        setLoading(false);
+        onLogin({ name: ownerName, email: ownerEmail, joinedAt: new Date().toISOString() });
+        return;
+      }
+
       if (mode === "signup") {
         // Register API Call
-        const res = await fetch("http://localhost:5000/api/auth/register", {
+        const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name: cleanName, email: cleanEmail, password })
@@ -85,7 +107,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         onLogin({ name: data.user.name, email: data.user.email, joinedAt: data.user.joinedAt });
       } else {
         // Login API Call
-        const res = await fetch("http://localhost:5000/api/auth/login", {
+        const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: cleanEmail, password })
@@ -163,7 +185,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
             className="text-5xl font-bold tracking-[0.35em] mb-3 select-none"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            <span className="text-shimmer">LUMIÈRE</span>
+            <span className="text-shimmer">{appName.toUpperCase()}</span>
           </motion.h1>
 
           <div className="flex items-center justify-center gap-4">

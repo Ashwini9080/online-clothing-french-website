@@ -6,20 +6,76 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from './models/User.js';
 
-dotenv.config();
+dotenv.config({ path: ['.env.local', '.env'] });
+
+interface MemoryUser {
+  _id: string;
+  name: string;
+  email: string;
+  password: string;
+  joinedAt: Date;
+}
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT || 5000);
 const JWT_SECRET = process.env.JWT_SECRET || 'lumiere_super_secret_fallback_key';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/lumiere-studio';
+const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
+const memoryUsers: MemoryUser[] = [];
+
+function isMongoReady(): boolean {
+  return mongoose.connection.readyState === 1;
+}
+
+async function findUserByEmail(email: string): Promise<MemoryUser | null> {
+  const normalizedEmail = email.toLowerCase();
+
+  if (isMongoReady()) {
+    return User.findOne({ email: normalizedEmail }) as unknown as MemoryUser | null;
+  }
+
+  return memoryUsers.find((user) => user.email.toLowerCase() === normalizedEmail) || null;
+}
+
+async function createUserRecord(name: string, email: string, passwordHash: string): Promise<MemoryUser> {
+  if (isMongoReady()) {
+    const newUser = new User({
+      name,
+      email: email.toLowerCase(),
+      password: passwordHash,
+    });
+
+    await newUser.save();
+    return newUser as unknown as MemoryUser;
+  }
+
+  const newUser: MemoryUser = {
+    _id: `${Date.now()}-${memoryUsers.length + 1}`,
+    name,
+    email: email.toLowerCase(),
+    password: passwordHash,
+    joinedAt: new Date(),
+  };
+
+  memoryUsers.push(newUser);
+  return newUser;
+}
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: CORS_ORIGIN === '*' ? true : CORS_ORIGIN.split(',') }));
 app.use(express.json());
 
+// Health check
+app.get('/api/health', (_req, res) => {
+  res.json({ status: 'ok', service: 'lumiere-backend', timestamp: new Date().toISOString() });
+});
+
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/lumiere-studio')
+mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ MongoDB Connected'))
-  .catch(err => console.error('❌ MongoDB Connection Error:', err));
+  .catch((err) => {
+    console.warn('⚠️ MongoDB unavailable, using in-memory auth store for local development:', err.message);
+  });
 
 // ─── AUTHENTICATION ROUTES ──────────────────────────────────────────
 
@@ -27,9 +83,14 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/lumiere-stu
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+
+    if (!name || !normalizedEmail || !password) {
+      return res.status(400).json({ error: 'Name, email, and password are required.' });
+    }
 
     // Check if user exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await findUserByEmail(normalizedEmail);
     if (existingUser) {
       return res.status(400).json({ error: 'An account with this email already exists.' });
     }
@@ -39,13 +100,7 @@ app.post('/api/auth/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create user
-    const newUser = new User({
-      name,
-      email,
-      password: hashedPassword
-    });
-
-    await newUser.save();
+    const newUser = await createUserRecord(name, normalizedEmail, hashedPassword);
 
     // Create JWT
     const token = jwt.sign({ id: newUser._id }, JWT_SECRET, { expiresIn: '24h' });
@@ -64,9 +119,10 @@ app.post('/api/auth/register', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+    const normalizedEmail = String(email || '').trim().toLowerCase();
 
     // Check user
-    const user = await User.findOne({ email });
+    const user = await findUserByEmail(normalizedEmail);
     if (!user) {
       return res.status(400).json({ error: 'Incorrect email or password.' });
     }

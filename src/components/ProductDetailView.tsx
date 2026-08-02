@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Heart, ChevronDown, Check, Ruler, ShoppingBag, ArrowLeft, Sparkles, Star } from "lucide-react";
 import { Product } from "../types";
-import { products } from "../data";
 
 interface ProductDetailViewProps {
+  products: Product[];
   productId: string;
   onNavigateToProduct: (productId: string) => void;
   onNavigateBack: () => void;
@@ -14,6 +14,7 @@ interface ProductDetailViewProps {
 }
 
 export default function ProductDetailView({
+  products,
   productId,
   onNavigateToProduct,
   onNavigateBack,

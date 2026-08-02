@@ -1,13 +1,14 @@
 import emailjs from "@emailjs/browser";
+import { adminEmail, emailjs as emailjsConfig } from "../config";
 import { Order } from "../types";
 
 // EmailJS configuration — values come from .env.local (never commit real keys)
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string;
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID as string;
-const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string;
+const PUBLIC_KEY = emailjsConfig.publicKey;
+const SERVICE_ID = emailjsConfig.serviceId;
+const TEMPLATE_ID = emailjsConfig.templateId;
 
 // Admin email — ALWAYS gets notified of every order
-const ADMIN_EMAIL = "guptaashwini511@gmail.com";
+const ADMIN_EMAIL = adminEmail;
 const ADMIN_NAME = "Ashwini Gupta";
 
 /**

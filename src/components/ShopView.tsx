@@ -2,9 +2,9 @@ import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Heart, Search, Filter, Check, RefreshCw, X, SlidersHorizontal } from "lucide-react";
 import { Product } from "../types";
-import { products } from "../data";
 
 interface ShopViewProps {
+  products: Product[];
   onNavigateToProduct: (productId: string) => void;
   wishlistIds: string[];
   onToggleWishlist: (product: Product) => void;
@@ -19,6 +19,7 @@ interface ShopViewProps {
 }
 
 export default function ShopView({
+  products,
   onNavigateToProduct,
   wishlistIds,
   onToggleWishlist,

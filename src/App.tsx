@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Heart, ShoppingBag, Store, Home, User, CheckCircle, ArrowRight, Mail, Loader2, AlertCircle } from "lucide-react";
+import { X, Heart, ShoppingBag, Store, Home, User, CheckCircle, ArrowRight, Mail, Loader2, AlertCircle, ShieldCheck } from "lucide-react";
 import { Product, CartItem, WishlistItem, LoggedInUser, DeliveryAddress } from "./types";
-import { products } from "./data";
+import { initialProducts } from "./data";
 import Navbar from "./components/Navbar";
 import BottomNav from "./components/BottomNav";
 import HomeView from "./components/HomeView";
@@ -12,17 +12,29 @@ import WishlistView from "./components/WishlistView";
 import ProfileView from "./components/ProfileView";
 import CartDrawer from "./components/CartDrawer";
 import LoginPage from "./components/LoginPage";
+import AdminPanel from "./components/AdminPanel";
 import { sendOrderConfirmation, generateOrderId } from "./services/emailService";
 import { readSession, clearSession } from "./services/security";
+import { ownerName, ownerEmail, ownerPassword } from "./config";
 
 export default function App() {
   // Auth state — uses secure session reader (validates expiry + data integrity)
   const [currentUser, setCurrentUser] = useState<LoggedInUser | null>(() => readSession());
 
   // Navigation & Routing States
-  const [currentView, setCurrentView] = useState<"home" | "shop" | "wishlist" | "profile" | "detail">("home");
+  const [currentView, setCurrentView] = useState<"home" | "shop" | "wishlist" | "profile" | "detail" | "admin">("home");
   const [selectedProductId, setSelectedProductId] = useState<string>("fluid-silk-slip-dress");
   const [viewHistory, setViewHistory] = useState<string[]>([]);
+
+  // Catalog state (editable via admin panel)
+  const [catalogProducts, setCatalogProducts] = useState<Product[]>(() => {
+    try {
+      const saved = localStorage.getItem("lumiere_catalog_products");
+      return saved ? JSON.parse(saved) : initialProducts;
+    } catch {
+      return initialProducts;
+    }
+  });
 
   // Cart & Wishlist States (Persistent via localStorage)
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -47,6 +59,9 @@ export default function App() {
   const [cartOpen, setCartOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
+  const [adminAccessGranted, setAdminAccessGranted] = useState(false);
+  const [adminPasswordInput, setAdminPasswordInput] = useState("");
+  const [adminError, setAdminError] = useState("");
 
   // Order & Email state
   const [currentOrderId, setCurrentOrderId] = useState<string>("");
@@ -69,11 +84,39 @@ export default function App() {
     localStorage.setItem("lumiere_wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
 
+  useEffect(() => {
+    localStorage.setItem("lumiere_catalog_products", JSON.stringify(catalogProducts));
+  }, [catalogProducts]);
+
   // Handle routing navigation
-  const handleNavigate = (view: "home" | "shop" | "wishlist" | "profile") => {
-    setCurrentView(view);
+  const isOwnerAccount =
+    currentUser?.email?.toLowerCase() === ownerEmail.toLowerCase() ||
+    currentUser?.name?.toLowerCase() === ownerName.toLowerCase();
+
+  const handleNavigate = (view: "home" | "shop" | "wishlist" | "profile" | "admin") => {
+    if (view === "admin") {
+      if (!isOwnerAccount) {
+        setCurrentView("home");
+        setAdminError("Only the owner account can access this panel.");
+      } else {
+        setCurrentView("admin");
+      }
+    } else {
+      setCurrentView(view);
+    }
     setSidebarOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleEnterAdmin = () => {
+    if (adminPasswordInput === ownerPassword) {
+      setAdminAccessGranted(true);
+      setAdminError("");
+      setCurrentView("admin");
+      setSidebarOpen(false);
+    } else {
+      setAdminError("Incorrect owner password.");
+    }
   };
 
   const handleNavigateToProduct = (productId: string) => {
@@ -93,6 +136,18 @@ export default function App() {
       setCurrentView("shop");
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleAddProduct = (product: Product) => {
+    setCatalogProducts((prev) => [product, ...prev]);
+    setCurrentView("admin");
+  };
+
+  const handleRemoveProduct = (productId: string) => {
+    setCatalogProducts((prev) => prev.filter((product) => product.id !== productId));
+    if (selectedProductId === productId) {
+      setSelectedProductId(catalogProducts.find((product) => product.id !== productId)?.id || "");
+    }
   };
 
   // Add Item to Bag (Cart)
@@ -234,6 +289,32 @@ export default function App() {
     return <LoginPage onLogin={(user) => setCurrentUser(user)} />;
   }
 
+  if (currentView === "admin" && !adminAccessGranted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-surface px-6">
+        <div className="w-full max-w-md rounded-2xl border border-outline-variant/15 bg-surface-container-low p-8 text-center">
+          <p className="font-label text-[10px] uppercase tracking-[0.35em] text-outline/50 mb-3">Owner Access</p>
+          <h2 className="font-headline text-3xl mb-3">Admin Panel</h2>
+          <p className="text-sm text-outline/70 mb-6">Only the owner can access product management.</p>
+          <input
+            type="password"
+            value={adminPasswordInput}
+            onChange={(e) => setAdminPasswordInput(e.target.value)}
+            placeholder="Enter owner password"
+            className="w-full border border-outline-variant/20 bg-transparent px-4 py-3 text-sm outline-none focus:border-primary mb-4"
+          />
+          {adminError && <p className="text-sm text-amber-600 mb-4">{adminError}</p>}
+          <button
+            onClick={handleEnterAdmin}
+            className="w-full bg-primary px-5 py-3 text-sm font-label uppercase tracking-[0.25em] text-on-primary hover:bg-primary-fixed transition-all cursor-pointer"
+          >
+            Enter Admin Area
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-surface text-on-surface flex flex-col justify-between font-body antialiased selection:bg-primary selection:text-on-primary">
       
@@ -264,6 +345,7 @@ export default function App() {
 
             {currentView === "shop" && (
               <ShopView
+                products={catalogProducts}
                 onNavigateToProduct={handleNavigateToProduct}
                 wishlistIds={wishlistIds}
                 onToggleWishlist={handleToggleWishlist}
@@ -280,12 +362,22 @@ export default function App() {
 
             {currentView === "detail" && (
               <ProductDetailView
+                products={catalogProducts}
                 productId={selectedProductId}
                 onNavigateToProduct={handleNavigateToProduct}
                 onNavigateBack={handleNavigateBack}
                 onAddToBag={handleAddToBag}
                 wishlistIds={wishlistIds}
                 onToggleWishlist={handleToggleWishlist}
+              />
+            )}
+
+            {currentView === "admin" && (
+              <AdminPanel
+                products={catalogProducts}
+                onAddProduct={handleAddProduct}
+                onRemoveProduct={handleRemoveProduct}
+                onBack={() => handleNavigate("shop")}
               />
             )}
 
@@ -401,6 +493,18 @@ export default function App() {
                     <User className="w-4 h-4" />
                     <span>Client Closet</span>
                   </button>
+
+                  {isOwnerAccount && (
+                    <button
+                      onClick={() => handleNavigate("admin")}
+                      className={`flex items-center space-x-4 text-sm font-label uppercase tracking-[0.2em] py-2 text-left cursor-pointer transition-all ${
+                        currentView === "admin" ? "text-primary font-bold pl-2" : "text-outline hover:text-primary"
+                      }`}
+                    >
+                      <ShieldCheck className="w-4 h-4" />
+                      <span>Owner Panel</span>
+                    </button>
+                  )}
                 </nav>
               </div>
 

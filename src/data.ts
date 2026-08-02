@@ -28,7 +28,7 @@ export const categories: Category[] = [
   }
 ];
 
-export const products: Product[] = [
+export const initialProducts: Product[] = [
   {
     id: "fluid-silk-slip-dress",
     title: "Fluid Silk Slip Dress",
