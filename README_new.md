@@ -6,7 +6,7 @@ A modern clothing e-commerce web app built with React, TypeScript, Vite, Express
 - Product browsing and detail pages
 - Cart and wishlist flows
 - Authentication and protected owner/admin areas
-- Contact form support
+- Contact form integration support
 - Responsive UI for mobile and desktop
 
 ## Tech Stack
@@ -20,7 +20,7 @@ A modern clothing e-commerce web app built with React, TypeScript, Vite, Express
 ### Prerequisites
 - Node.js 18+
 - npm
-- MongoDB (optional; the backend can fall back locally)
+- MongoDB (optional for local auth fallback)
 
 ### Install dependencies
 ```bash
@@ -67,3 +67,5 @@ Recommended deployment:
 - Backend: Render
 - Database: MongoDB Atlas
 
+## License
+MIT
