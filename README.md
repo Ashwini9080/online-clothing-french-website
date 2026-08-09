@@ -9,6 +9,10 @@ A modern clothing e-commerce web app built with React, TypeScript, Vite, Express
 - Contact form support
 - Responsive UI for mobile and desktop
 
+## Recent Updates
+- **Smooth Scrolling**: Integrated Lenis for a buttery-smooth, premium scrolling experience.
+- **Enhanced UI/UX**: Improved animations and fixed Framer Motion typing errors.
+- **Robust Navigation**: Updated routing and navigation bar prop types for Admin access.
 ## Tech Stack
 - Frontend: React + TypeScript + Vite
 - Backend: Express + TypeScript

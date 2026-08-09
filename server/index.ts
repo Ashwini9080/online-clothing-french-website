@@ -1,10 +1,10 @@
 import express from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from './models/User.js';
+import { connectDB } from './config/db.js';
 
 dotenv.config({ path: ['.env.local', '.env'] });
 
@@ -19,12 +19,11 @@ interface MemoryUser {
 const app = express();
 const PORT = Number(process.env.PORT || 5000);
 const JWT_SECRET = process.env.JWT_SECRET || 'lumiere_super_secret_fallback_key';
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/lumiere-studio';
 const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
 const memoryUsers: MemoryUser[] = [];
 
 function isMongoReady(): boolean {
-  return mongoose.connection.readyState === 1;
+  return (globalThis as { mongoose?: { connection?: { readyState?: number } } }).mongoose?.connection?.readyState === 1;
 }
 
 async function findUserByEmail(email: string): Promise<MemoryUser | null> {
@@ -71,11 +70,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 // MongoDB Connection
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('✅ MongoDB Connected'))
-  .catch((err) => {
-    console.warn('⚠️ MongoDB unavailable, using in-memory auth store for local development:', err.message);
-  });
+connectDB();
 
 // ─── AUTHENTICATION ROUTES ──────────────────────────────────────────
 
