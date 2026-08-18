@@ -26,13 +26,13 @@ export function sanitizeEmail(email: string): string {
  */
 export function validatePassword(password: string): string | null {
   if (password.length < 8)
-    return "Password kam se kam 8 characters ka hona chahiye.";
+    return "Password must be at least 8 characters long.";
   if (password.length > 128)
-    return "Password bahut lamba hai (max 128 characters).";
+    return "Password is too long (maximum 128 characters).";
   if (!/[A-Z]/.test(password))
-    return "Password mein kam se kam 1 capital letter honi chahiye.";
+    return "Password must contain at least one uppercase letter.";
   if (!/[0-9]/.test(password))
-    return "Password mein kam se kam 1 number hona chahiye.";
+    return "Password must contain at least one number.";
   return null; // valid
 }
 

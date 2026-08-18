@@ -3,8 +3,8 @@ import { Home, Store, Heart, User } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 interface BottomNavProps {
-  currentView: "home" | "shop" | "wishlist" | "profile" | "detail";
-  onNavigate: (view: "home" | "shop" | "wishlist" | "profile") => void;
+  currentView: "home" | "shop" | "wishlist" | "profile" | "detail" | "admin";
+  onNavigate: (view: "home" | "shop" | "wishlist" | "profile" | "admin") => void;
   wishlistCount: number;
 }
 

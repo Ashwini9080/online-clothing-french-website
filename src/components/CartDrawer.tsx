@@ -104,12 +104,12 @@ export default function CartDrawer({
 
   const validateAddress = (): boolean => {
     const newErrors: Partial<DeliveryAddress> = {};
-    if (!address.fullName.trim() || address.fullName.trim().length < 2) newErrors.fullName = "Poora naam daalein";
-    if (!/^[6-9]\d{9}$/.test(address.phone.replace(/\s/g, ""))) newErrors.phone = "Valid 10-digit mobile number daalein";
-    if (!address.addressLine1.trim() || address.addressLine1.trim().length < 5) newErrors.addressLine1 = "Ghar ka address daalein";
-    if (!address.city.trim() || address.city.trim().length < 2) newErrors.city = "Sheher ka naam daalein";
-    if (!address.state) newErrors.state = "State chunein";
-    if (!/^\d{6}$/.test(address.pincode.trim())) newErrors.pincode = "6-digit PIN code daalein";
+    if (!address.fullName.trim() || address.fullName.trim().length < 2) newErrors.fullName = "Please enter your full name";
+    if (!/^[0-9+()-\s]{8,15}$/.test(address.phone.trim())) newErrors.phone = "Please enter a valid phone number";
+    if (!address.addressLine1.trim() || address.addressLine1.trim().length < 5) newErrors.addressLine1 = "Please enter a delivery address";
+    if (!address.city.trim() || address.city.trim().length < 2) newErrors.city = "Please enter a city";
+    if (!address.state) newErrors.state = "Please select a state";
+    if (!/^\d{4,10}$/.test(address.pincode.trim())) newErrors.pincode = "Please enter a valid postal code / PIN";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };

@@ -7,7 +7,7 @@ const defaultOwnerEmail = getEnv("VITE_OWNER_EMAIL", getEnv("VITE_ADMIN_EMAIL", 
 
 export const appConfig = {
   appName: getEnv("VITE_APP_NAME", "LUMIÈRE Studio"),
-  apiBaseUrl: getEnv("VITE_API_URL", "http://localhost:5000").replace(/\/$/, ""),
+  apiBaseUrl: getEnv("VITE_API_URL", import.meta.env.DEV ? "http://localhost:5000" : "").replace(/\/$/, ""),
   adminEmail: getEnv("VITE_ADMIN_EMAIL", "guptaashwini511@gmail.com"),
   ownerName: getEnv("VITE_OWNER_NAME", "Ashwini"),
   ownerEmail: defaultOwnerEmail,

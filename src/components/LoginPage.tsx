@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Eye, EyeOff, Mail, User, Lock, ArrowRight, CheckCircle, Loader2, ShieldAlert, Timer, Sparkles } from "lucide-react";
-import { LoggedInUser, StoredUser } from "../types";
+import { LoggedInUser } from "../types";
 import { apiBaseUrl, appName, ownerEmail, ownerName, ownerPassword } from "../config";
 import {
   sanitizeEmail,
@@ -14,9 +14,6 @@ interface LoginPageProps {
 
 type AuthMode = "login" | "signup";
 
-const USERS_STORE_KEY = "lumiere_users";
-const MAX_ATTEMPTS = 5;
-const LOCKOUT_DURATION_MS = 15 * 60 * 1000;
 const API_BASE_URL = apiBaseUrl;
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
@@ -29,7 +26,15 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
   const [lockoutMs, setLockoutMs] = useState<number>(0);
-  const [lockoutTimer, setLockoutTimer] = useState<NodeJS.Timeout | null>(null);
+  const [lockoutTimer, setLockoutTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (lockoutTimer) {
+        clearTimeout(lockoutTimer);
+      }
+    };
+  }, [lockoutTimer]);
 
   // Password strength calculation
   const getPasswordStrength = (pw: string) => {
@@ -43,8 +48,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   const passwordStrength = getPasswordStrength(password);
   const strengthLabels = ["", "Weak", "Fair", "Good", "Strong"];
   const strengthColors = ["", "#ef4444", "#f59e0b", "#10b981", "#a78bfa"];
-
-
 
   const triggerShake = () => { setShake(true); setTimeout(() => setShake(false), 600); };
   const formatLockoutTime = (ms: number) => `${Math.floor(ms / 60000)}:${Math.floor((ms % 60000) / 1000).toString().padStart(2, "0")}`;
