@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Lenis from "lenis";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Heart, ShoppingBag, Store, Home, User, CheckCircle, ArrowRight, Mail, Loader2, AlertCircle, ShieldCheck } from "lucide-react";
 import { Product, CartItem, WishlistItem, LoggedInUser, DeliveryAddress } from "./types";
@@ -18,6 +19,26 @@ import { readSession, clearSession } from "./services/security";
 import { ownerName, ownerEmail, ownerPassword } from "./config";
 
 export default function App() {
+  // Initialize Lenis for smooth scrolling
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: "vertical",
+      gestureOrientation: "vertical",
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => lenis.destroy();
+  }, []);
+
   // Auth state — uses secure session reader (validates expiry + data integrity)
   const [currentUser, setCurrentUser] = useState<LoggedInUser | null>(() => readSession());
 
