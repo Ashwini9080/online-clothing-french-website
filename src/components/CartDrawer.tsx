@@ -231,9 +231,9 @@ export default function CartDrawer({
                   key="cart-step"
                   initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.25 }}
-                  className="flex-1 flex flex-col overflow-hidden"
+                  className="flex-1 flex flex-col overflow-hidden min-h-0"
                 >
-                  <div className="flex-1 overflow-y-auto p-6 space-y-4 styled-scrollbar">
+                  <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-4 styled-scrollbar overscroll-contain">
                     {cartItems.length === 0 ? (
                       <div className="h-full flex flex-col items-center justify-center text-center space-y-5 py-20">
                         <motion.div
@@ -405,9 +405,9 @@ export default function CartDrawer({
                   key="address-step"
                   initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.25 }}
-                  className="flex-1 flex flex-col overflow-hidden"
+                  className="flex-1 flex flex-col overflow-hidden min-h-0"
                 >
-                  <div className="flex-1 overflow-y-auto p-6 space-y-6 styled-scrollbar">
+                  <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-6 styled-scrollbar overscroll-contain">
                     {/* Order mini summary */}
                     <div className="flex justify-between items-center p-4 border border-outline-variant/10"
                       style={{ background: "rgba(167,139,250,0.04)" }}>
@@ -419,7 +419,7 @@ export default function CartDrawer({
                       </div>
                       <div className="text-right">
                         <p className="text-[10px] font-label uppercase tracking-widest text-outline/50">Shipping</p>
-                        <p className="text-xs text-primary font-medium mt-0.5">Free ✦</p>
+                        <p className="text-xs text-primary font-medium mt-0.5">Complimentary ✦</p>
                       </div>
                     </div>
 
@@ -432,8 +432,8 @@ export default function CartDrawer({
                         </div>
                         <h3 className="text-[10px] font-label uppercase tracking-widest font-bold text-primary">Contact Details</h3>
                       </div>
-                      <InputField label="Poora Naam" field="fullName" placeholder="Jaise: Rahul Sharma" maxLength={60} address={address} errors={errors} onUpdate={updateField} />
-                      <InputField label="Mobile Number" field="phone" placeholder="10-digit mobile number" type="tel" maxLength={10} address={address} errors={errors} onUpdate={updateField} />
+                      <InputField label="Full Name" field="fullName" placeholder="e.g. Rahul Sharma" maxLength={60} address={address} errors={errors} onUpdate={updateField} />
+                      <InputField label="Phone Number" field="phone" placeholder="e.g. 9876543210" type="tel" maxLength={15} address={address} errors={errors} onUpdate={updateField} />
                     </div>
 
                     {/* Delivery address */}
@@ -445,11 +445,11 @@ export default function CartDrawer({
                         </div>
                         <h3 className="text-[10px] font-label uppercase tracking-widest font-bold text-primary">Delivery Address</h3>
                       </div>
-                      <InputField label="Ghar / Flat / Office Number" field="addressLine1" placeholder="Jaise: Flat 4B, Sunshine Apartments" maxLength={150} address={address} errors={errors} onUpdate={updateField} />
-                      <InputField label="Area / Street / Landmark" field="addressLine2" placeholder="Jaise: Near SBI Bank, MG Road" required={false} maxLength={150} address={address} errors={errors} onUpdate={updateField} />
+                      <InputField label="Flat / House / Building" field="addressLine1" placeholder="e.g. Flat 4B, Sunshine Apartments" maxLength={150} address={address} errors={errors} onUpdate={updateField} />
+                      <InputField label="Street / Area / Landmark" field="addressLine2" placeholder="e.g. Near MG Road" required={false} maxLength={150} address={address} errors={errors} onUpdate={updateField} />
                       <div className="grid grid-cols-2 gap-3">
-                        <InputField label="City" field="city" placeholder="Jaise: Mumbai" maxLength={60} address={address} errors={errors} onUpdate={updateField} />
-                        <InputField label="PIN Code" field="pincode" placeholder="6-digit PIN" type="tel" maxLength={6} address={address} errors={errors} onUpdate={updateField} />
+                        <InputField label="City" field="city" placeholder="e.g. Mumbai" maxLength={60} address={address} errors={errors} onUpdate={updateField} />
+                        <InputField label="Postal / PIN Code" field="pincode" placeholder="e.g. 400001" type="tel" maxLength={10} address={address} errors={errors} onUpdate={updateField} />
                       </div>
                       {/* State */}
                       <div>
@@ -465,7 +465,7 @@ export default function CartDrawer({
                           style={{ borderRadius: "3px" }}
                           id="state-select"
                         >
-                          <option value="" className="bg-surface">State chunein…</option>
+                          <option value="" className="bg-surface">Select State…</option>
                           {INDIA_STATES.map((s) => (
                             <option key={s} value={s} className="bg-surface">{s}</option>
                           ))}
@@ -479,7 +479,7 @@ export default function CartDrawer({
                       style={{ background: "rgba(167,139,250,0.04)" }}>
                       <Navigation className="w-3.5 h-3.5 text-primary/60 flex-shrink-0 mt-0.5" />
                       <p className="text-[10px] text-outline/60 leading-relaxed tracking-wide">
-                        Aapka order 5–7 business days mein deliver hoga. Koi bhi sawaal ke liye humse contact karein.
+                        Your bespoke order will be delivered within 5–7 business days via carbon-neutral priority courier.
                       </p>
                     </div>
                   </div>
@@ -503,7 +503,7 @@ export default function CartDrawer({
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </motion.button>
                     <p className="text-center font-label text-[9px] text-outline/30 tracking-wider">
-                      Order place karne se pehle address verify karein.
+                      Please verify your shipping details before placing the order.
                     </p>
                   </div>
                 </motion.div>

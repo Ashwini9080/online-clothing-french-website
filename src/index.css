@@ -368,3 +368,32 @@ input:-webkit-autofill:focus {
   -webkit-text-fill-color: #eae5ff;
   caret-color: #eae5ff;
 }
+
+/* Custom smooth scrollbar */
+.styled-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(167, 139, 250, 0.4) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+.styled-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.styled-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.styled-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(167, 139, 250, 0.35);
+  border-radius: 9999px;
+}
+.styled-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(167, 139, 250, 0.6);
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
