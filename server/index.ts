@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -23,7 +24,7 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
 const memoryUsers: MemoryUser[] = [];
 
 function isMongoReady(): boolean {
-  return (globalThis as { mongoose?: { connection?: { readyState?: number } } }).mongoose?.connection?.readyState === 1;
+  return mongoose.connection.readyState === 1;
 }
 
 async function findUserByEmail(email: string): Promise<MemoryUser | null> {
