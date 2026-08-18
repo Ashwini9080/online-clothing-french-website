@@ -12,8 +12,10 @@ const MONGO_URI =
 
 export const connectDB = async () => {
   try {
-    await mongoose.connect(MONGO_URI);
-    console.log('✅ MongoDB Connected successfully');
+    await mongoose.connect(MONGO_URI, {
+      dbName: 'lumiere-studio',
+    });
+    console.log('✅ MongoDB Connected successfully (Database: lumiere-studio)');
   } catch (error) {
     console.warn('⚠️ MongoDB unavailable, using in-memory auth store for local development:', (error as Error).message);
   }
