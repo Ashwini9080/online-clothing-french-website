@@ -1,11 +1,11 @@
 import express from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { User } from './models/User.js';
-import { connectDB } from './config/db.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { createClient } from '@supabase/supabase-js';
 
 dotenv.config({ path: ['.env.local', '.env'] });
 
@@ -23,36 +23,76 @@ const JWT_SECRET = process.env.JWT_SECRET || 'lumiere_super_secret_fallback_key'
 const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
 const memoryUsers: MemoryUser[] = [];
 
-function isMongoReady(): boolean {
-  return mongoose.connection.readyState === 1;
+// Supabase server client (optional backend integration)
+const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || '';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '';
+
+const supabase = (supabaseUrl && supabaseKey && !supabaseUrl.includes('your-project-id'))
+  ? createClient(supabaseUrl, supabaseKey)
+  : null;
+
+if (supabase) {
+  console.log('✅ Supabase Client Connected');
+} else {
+  console.log('ℹ️ Supabase not configured in backend; using memory store fallback');
 }
 
 async function findUserByEmail(email: string): Promise<MemoryUser | null> {
   const normalizedEmail = email.toLowerCase();
 
-  if (isMongoReady()) {
-    return User.findOne({ email: normalizedEmail }) as unknown as MemoryUser | null;
+  if (supabase) {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('email', normalizedEmail)
+      .single();
+
+    if (!error && data) {
+      return {
+        _id: data.id,
+        name: data.name || data.full_name || '',
+        email: data.email,
+        password: data.password || '',
+        joinedAt: new Date(data.created_at || data.joined_at || Date.now())
+      };
+    }
   }
 
   return memoryUsers.find((user) => user.email.toLowerCase() === normalizedEmail) || null;
 }
 
 async function createUserRecord(name: string, email: string, passwordHash: string): Promise<MemoryUser> {
-  if (isMongoReady()) {
-    const newUser = new User({
-      name,
-      email: email.toLowerCase(),
-      password: passwordHash,
-    });
+  const normalizedEmail = email.toLowerCase();
 
-    await newUser.save();
-    return newUser as unknown as MemoryUser;
+  if (supabase) {
+    const { data, error } = await supabase
+      .from('profiles')
+      .insert([
+        {
+          name,
+          email: normalizedEmail,
+          password: passwordHash,
+          created_at: new Date().toISOString()
+        }
+      ])
+      .select()
+      .single();
+
+    if (!error && data) {
+      return {
+        _id: data.id,
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        joinedAt: new Date(data.created_at)
+      };
+    }
   }
 
   const newUser: MemoryUser = {
     _id: `${Date.now()}-${memoryUsers.length + 1}`,
     name,
-    email: email.toLowerCase(),
+    email: normalizedEmail,
     password: passwordHash,
     joinedAt: new Date(),
   };
@@ -67,11 +107,13 @@ app.use(express.json());
 
 // Health check
 app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', service: 'lumiere-backend', timestamp: new Date().toISOString() });
+  res.json({
+    status: 'ok',
+    service: 'lumiere-backend',
+    database: supabase ? 'supabase' : 'in-memory',
+    timestamp: new Date().toISOString()
+  });
 });
-
-// MongoDB Connection
-connectDB();
 
 // ─── AUTHENTICATION ROUTES ──────────────────────────────────────────
 
@@ -143,9 +185,6 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // ─── SERVE FRONTEND (SINGLE-SERVICE DEPLOYMENT) ─────────────────────
-import path from 'path';
-import { fileURLToPath } from 'url';
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const distPath = path.join(__dirname, '../dist');

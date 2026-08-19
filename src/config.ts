@@ -17,6 +17,11 @@ export const appConfig = {
     serviceId: getEnv("VITE_EMAILJS_SERVICE_ID", ""),
     templateId: getEnv("VITE_EMAILJS_TEMPLATE_ID", ""),
   },
+  supabase: {
+    url: getEnv("VITE_SUPABASE_URL", ""),
+    anonKey: getEnv("VITE_SUPABASE_ANON_KEY", ""),
+  },
 };
 
-export const { appName, apiBaseUrl, adminEmail, ownerName, ownerEmail, ownerPassword, emailjs } = appConfig;
+export const { appName, apiBaseUrl, adminEmail, ownerName, ownerEmail, ownerPassword, emailjs, supabase: supabaseConfig } = appConfig;
+

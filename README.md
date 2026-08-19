@@ -1,73 +1,80 @@
 # Lumière Studio
 
-A modern clothing e-commerce web app built with React, TypeScript, Vite, Express, and MongoDB.
+A modern luxury clothing e-commerce web application built with React 19, TypeScript, Vite, Tailwind CSS, and Supabase.
 
 ## Features
-- Product browsing and detail pages
-- Cart and wishlist flows
-- Authentication and protected owner/admin areas
-- Contact form support
-- Responsive UI for mobile and desktop
+- ✨ Product browsing and detailed showcase pages
+- 🛍️ Cart and wishlist flows
+- 🔐 Secure Authentication (Supabase Auth + Session management)
+- 👑 Protected Owner / Admin areas
+- ✉️ Contact and custom inquiry forms (EmailJS integration)
+- 📱 Responsive luxury UI with smooth Lenis scrolling & Motion animations
 
-## Recent Updates
-- **Smooth Scrolling**: Integrated Lenis for a buttery-smooth, premium scrolling experience.
-- **Enhanced UI/UX**: Improved animations and fixed Framer Motion typing errors.
-- **Robust Navigation**: Updated routing and navigation bar prop types for Admin access.
 ## Tech Stack
-- Frontend: React + TypeScript + Vite
-- Backend: Express + TypeScript
-- Database: MongoDB / Mongoose
-- Styling: Tailwind CSS
+- **Frontend**: React 19 + TypeScript + Vite
+- **Styling**: Tailwind CSS
+- **Database & Auth**: Supabase (PostgreSQL)
+- **Backend (Optional)**: Express + TypeScript
+- **Animations & Smooth Scroll**: Motion (Framer Motion) + Lenis
+
+---
+
+## ⚡ How to Create & Connect Supabase Database
+
+### Step 1: Create a Supabase Project
+1. Go to [https://supabase.com](https://supabase.com) and click **"Sign In"** / **"Start your project"**.
+2. Click **"New Project"**.
+3. Choose an Organization, give your project a name (e.g., `lumiere-studio`), choose a secure database password, and select the region closest to you.
+4. Click **"Create new project"** (takes ~1-2 minutes to provision).
+
+### Step 2: Get Your API Credentials
+1. In your Supabase Project Dashboard, go to **Project Settings** (gear icon at the bottom left) -> **API** (or **Data API**).
+2. Copy the following values:
+   - **Project URL** (e.g. `https://xyzcompany.supabase.co`)
+   - **anon / public key** (e.g. `eyJhbGciOi...`)
+
+### Step 3: Run the Database Schema
+1. In your Supabase Dashboard, click on **SQL Editor** from the left navigation bar.
+2. Click **"New query"**.
+3. Copy the entire contents of [`supabase_schema.sql`](./supabase_schema.sql) and paste it into the editor.
+4. Click **"Run"** (or press Ctrl+Enter / Cmd+Enter).
+5. This automatically creates the `profiles`, `orders`, `wishlists`, and `contact_inquiries` tables along with Row Level Security (RLS) policies and triggers!
+
+### Step 4: Configure Supabase Auth (Email/Password)
+1. Go to **Authentication** -> **Providers** -> **Email**.
+2. Make sure **"Enable Email provider"** is turned ON.
+3. *(Recommended for local development)*: Under **Authentication** -> **URL Configuration**, set Site URL to `http://localhost:3000`. You can also turn off **"Confirm email"** in **Authentication** -> **Providers** -> **Email** if you want instant logins during testing.
+
+### Step 5: Add Credentials to `.env.local`
+Open your `.env.local` file and add your Supabase credentials:
+```env
+VITE_SUPABASE_URL=https://your-project-id.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-public-key-here
+```
+
+---
 
 ## Local Development
 
-### Prerequisites
-- Node.js 18+
-- npm
-- MongoDB (optional; the backend can fall back locally)
-
-### Install dependencies
+### 1. Install dependencies
 ```bash
 npm install
 ```
 
-### Start the backend
+### 2. Start the development server
 ```bash
-npx tsx server/index.ts
+npm run dev
 ```
+Open: [http://localhost:3000](http://localhost:3000)
 
-### Start the frontend
+### 3. (Optional) Run Express backend
 ```bash
-npm run dev -- --host 0.0.0.0
+npm run server
 ```
 
-Open:
-- Frontend: http://localhost:3000/
-- Backend health: http://localhost:5000/api/health
+---
 
-## Environment Variables
-Create a `.env.local` file with values such as:
-```env
-VITE_API_URL=http://localhost:5000
-VITE_ADMIN_EMAIL=your@email.com
-VITE_OWNER_NAME=Ashwini
-VITE_OWNER_EMAIL=your@email.com
-VITE_OWNER_PASSWORD=owner1234
-JWT_SECRET=your-secret
-MONGO_URI=mongodb://localhost:27017/lumiere-studio
-CORS_ORIGIN=http://localhost:3000
-```
-
-## Build
+## Build for Production
 ```bash
 npm run build
 ```
-
-## Deployment
-This app is split into frontend and backend services.
-
-Recommended deployment:
-- Frontend: Netlify or Vercel
-- Backend: Render
-- Database: MongoDB Atlas
-

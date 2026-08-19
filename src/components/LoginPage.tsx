@@ -7,6 +7,8 @@ import {
   sanitizeEmail,
   validatePassword, saveSession,
 } from "../services/security";
+import { supabase, isSupabaseConfigured } from "../lib/supabase";
+
 
 interface LoginPageProps {
   onLogin: (user: LoggedInUser) => void;
@@ -91,6 +93,65 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         return;
       }
 
+      if (isSupabaseConfigured && supabase) {
+        if (mode === "signup") {
+          const { data, error: supaErr } = await supabase.auth.signUp({
+            email: cleanEmail,
+            password: password,
+            options: {
+              data: {
+                name: cleanName,
+                full_name: cleanName,
+              }
+            }
+          });
+
+          if (supaErr) {
+            setError(supaErr.message || "Registration failed.");
+            triggerShake();
+            setLoading(false);
+            return;
+          }
+
+          const user = data.user;
+          const session = data.session;
+          const token = session?.access_token || "supabase-session";
+          const userName = user?.user_metadata?.name || cleanName;
+          const userEmail = user?.email || cleanEmail;
+          const userJoined = user?.created_at || new Date().toISOString();
+
+          saveSession({ name: userName, email: userEmail, joinedAt: userJoined }, token);
+          setLoading(false);
+          onLogin({ name: userName, email: userEmail, joinedAt: userJoined });
+          return;
+        } else {
+          const { data, error: supaErr } = await supabase.auth.signInWithPassword({
+            email: cleanEmail,
+            password: password,
+          });
+
+          if (supaErr) {
+            setError(supaErr.message || "Incorrect email or password.");
+            triggerShake();
+            setLoading(false);
+            return;
+          }
+
+          const user = data.user;
+          const session = data.session;
+          const token = session?.access_token || "supabase-session";
+          const userName = user?.user_metadata?.name || user?.email?.split('@')[0] || cleanName || "User";
+          const userEmail = user?.email || cleanEmail;
+          const userJoined = user?.created_at || new Date().toISOString();
+
+          saveSession({ name: userName, email: userEmail, joinedAt: userJoined }, token);
+          clearRateLimit();
+          setLoading(false);
+          onLogin({ name: userName, email: userEmail, joinedAt: userJoined });
+          return;
+        }
+      }
+
       if (mode === "signup") {
         // Register API Call
         const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
@@ -129,9 +190,10 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       }
     } catch (err) {
       console.error("[Auth] Unexpected error:", err);
-      setError("Server connection failed. Please make sure the backend is running.");
+      setError("Connection failed. Please check your Supabase credentials or backend server.");
       triggerShake(); setLoading(false);
     }
+
   };
 
   const switchMode = () => { setMode((prev) => (prev === "login" ? "signup" : "login")); setError(""); setName(""); setEmail(""); setPassword(""); };
